@@ -435,6 +435,121 @@
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
         }
 
+        /* Medidor de Gasto */
+        .spending-meter {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .meter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .meter-header h3 {
+            margin: 0;
+            color: #333;
+        }
+
+        .meter-info {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+        }
+
+        .meter-info-item {
+            flex: 1;
+        }
+
+        .meter-info-item label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .meter-info-item .value {
+            font-weight: bold;
+            color: #333;
+            font-size: 1.2em;
+        }
+
+        .meter-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .meter-fill {
+            height: 100%;
+            background: linear-gradient(to right, #4caf50, #ffc107, #ff6b6b);
+            width: 0%;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .meter-fill.warning {
+            background: linear-gradient(to right, #ffc107, #ff6b6b);
+        }
+
+        .meter-fill.danger {
+            background: #ff006e;
+            animation: neonPulse 0.6s infinite;
+        }
+
+        @keyframes neonPulse {
+            0%, 100% { 
+                box-shadow: inset 0 0 10px #ff006e, 0 0 20px #ff006e;
+            }
+            50% { 
+                box-shadow: inset 0 0 20px #ff006e, 0 0 40px #ff006e;
+            }
+        }
+
+        /* Alerta Neon */
+        .alert-neon {
+            display: none;
+            background: linear-gradient(135deg, #ff006e 0%, #ff3366 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border: 2px solid #ff006e;
+            box-shadow: 0 0 20px #ff006e, inset 0 0 10px rgba(255, 0, 110, 0.3);
+            animation: neonBlink 0.8s infinite;
+            font-weight: 600;
+            text-align: center;
+            font-size: 1.1em;
+        }
+
+        .alert-neon.show {
+            display: block;
+        }
+
+        @keyframes neonBlink {
+            0%, 100% { 
+                opacity: 1;
+                box-shadow: 0 0 20px #ff006e, inset 0 0 10px rgba(255, 0, 110, 0.3);
+            }
+            50% { 
+                opacity: 0.7;
+                box-shadow: 0 0 40px #ff006e, inset 0 0 20px rgba(255, 0, 110, 0.5);
+            }
+        }
+
         /* Firma profesional */
         .footer {
             position: fixed;
@@ -498,7 +613,7 @@
         <!-- Pestañas de navegación -->
         <div class="tabs">
             <button class="tab-button active" onclick="switchTab('dashboard')">📊 Dashboard</button>
-            <button class="tab-button" onclick="switchTab('gastos')">💰 Mis Gastos</button>
+            <button class="tab-button" onclick="switchTab('gastos')">💰 Mis Finanzas</button>
             <button class="tab-button" onclick="switchTab('libros')">📚 Mis Libros</button>
             <button class="tab-button" onclick="switchTab('presupuesto')">💼 Presupuesto</button>
             <button class="tab-button" onclick="switchTab('reportes')">📑 Reportes</button>
@@ -535,10 +650,38 @@
             </div>
         </div>
 
-        <!-- TAB: Mis Gastos -->
+        <!-- TAB: Mis Finanzas -->
         <div id="gastos" class="tab-content">
-            <h2>💰 Registrar Mis Gastos</h2>
+            <h2>💰 Mis Finanzas</h2>
             <div id="message" class="message"></div>
+
+            <!-- Medidor de Gasto Diario -->
+            <div class="spending-meter">
+                <div class="meter-header">
+                    <h3>🎯 Mi Límite Diario</h3>
+                    <button onclick="editDailyLimit()" class="btn btn-primary" style="flex: 0; min-width: auto; padding: 8px 16px;">✏️ Editar</button>
+                </div>
+                <div class="meter-info">
+                    <div class="meter-info-item">
+                        <label>Límite:</label>
+                        <div class="value" id="limitDisplay">$0.00</div>
+                    </div>
+                    <div class="meter-info-item">
+                        <label>Gastado hoy:</label>
+                        <div class="value" id="todaySpent">$0.00</div>
+                    </div>
+                    <div class="meter-info-item">
+                        <label>Disponible:</label>
+                        <div class="value" id="availableAmount">$0.00</div>
+                    </div>
+                </div>
+                <div class="meter-bar">
+                    <div class="meter-fill" id="meterFill"></div>
+                </div>
+                <div class="alert-neon" id="alertNeon">
+                    ⚠️ ¡Ojo con eso manito! 🚨 Ya rebasaste tu límite diario
+                </div>
+            </div>
 
             <form id="expenseForm" onsubmit="addExpense(event)">
                 <div class="form-row">
@@ -579,6 +722,7 @@
                         <label for="tipo">📌 Tipo</label>
                         <select id="tipo" required>
                             <option value="Gasto">Gasto</option>
+                            <option value="Gastos Hormiga">Gastos Hormiga</option>
                             <option value="Ingreso">Ingreso</option>
                             <option value="Inversión">Inversión</option>
                         </select>
@@ -669,7 +813,7 @@
                         <label for="budgetMonto">💰 Monto Presupuestado</label>
                         <div style="display: flex; align-items: center; border: 2px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
                             <span style="padding: 12px; background: #f0f0f0; font-weight: 700; color: #667eea; font-family: 'Courier New', monospace; font-size: 1.1em;">$</span>
-                            <input type="text" id="budgetMonto" placeholder="0" style="flex: 1; border: none; padding: 12px; font-size: 1em; font-family: 'Courier New', monospace; font-weight: 600;" oninput="formatMontoInput(this)" required>
+                            <input type="text" id="budgetMonto" placeholder="0" style="flex: 1; border: none; padding: 12px; font-size: 1em; font-family: 'Courier New', monospace; font-weight: 600;" oninput="formatPresupuestoInput(this)" required>
                         </div>
                     </div>
                 </div>
@@ -797,8 +941,76 @@
         </div>
     </div>
 
-    <!-- Botón flotante de ayuda -->
-    <button class="floating-help-btn" onclick="alert('📱 Funciona Offline\\n💾 Datos sincronizados\\n🔒 Información privada\\n⚡ Rápido y seguro')" title="Información">ℹ️</button>
+    <!-- Botón flotante de ayuda / Seguridad -->
+    <button class="floating-help-btn" onclick="showSecurityInfo()" title="Información y Seguridad">ℹ️</button>
+
+    <!-- Modal de Seguridad -->
+    <div id="securityModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center;">
+        <div style="background: white; border-radius: 15px; padding: 30px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+            <h2 style="margin-bottom: 20px; color: #667eea;">🔐 Seguridad y Privacidad</h2>
+
+            <div id="securityInfo" style="display: none;">
+                <div style="background: #d4edda; border-left: 4px solid #28a745; padding: 15px; margin-bottom: 20px; border-radius: 5px;">
+                    <p id="encryptionStatus" style="margin: 0; color: #155724; font-weight: 600;">✅ Datos Encriptados con AES-256</p>
+                </div>
+                <p style="color: #666; margin-bottom: 15px;">Tus datos están protegidos con encripción de nivel militar.</p>
+                <button onclick="closeSecurityModal()" class="btn btn-primary" style="width: 100%; margin-top: 20px;">Cerrar</button>
+            </div>
+
+            <div id="encryptionSetup" style="display: block;">
+                <h3 style="color: #333; margin-bottom: 15px;">🔑 Activar Encripción</h3>
+                <p style="color: #666; margin-bottom: 15px; font-size: 0.9em;">Protege tus datos con una contraseña personal. Solo tú podrás acceder.</p>
+
+                <div class="form-group">
+                    <label style="color: #333;">Contraseña (mín. 8 caracteres)</label>
+                    <input type="password" id="securityPassword" placeholder="Ingresa tu contraseña" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; margin-top: 8px;">
+                </div>
+
+                <div class="form-group">
+                    <label style="color: #333;">Confirmar Contraseña</label>
+                    <input type="password" id="securityPasswordConfirm" placeholder="Repite tu contraseña" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; margin-top: 8px;">
+                </div>
+
+                <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 5px;">
+                    <p style="margin: 0; color: #856404; font-size: 0.9em;">⚠️ <strong>Importante:</strong> Guarda tu contraseña en un lugar seguro. Si la olvidas, no podremos recuperar tus datos.</p>
+                </div>
+
+                <button onclick="enableEncryption()" class="btn btn-primary" style="width: 100%; margin-bottom: 10px;">🔐 Activar Encripción</button>
+                <button onclick="closeSecurityModal()" class="btn btn-secondary" style="width: 100%;">Cancelar</button>
+            </div>
+
+            <hr style="margin: 20px 0; border: none; border-top: 1px solid #e0e0e0;">
+
+            <h3 style="color: #333; margin-bottom: 15px;">📱 Información de la App</h3>
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-size: 0.9em; color: #666;">
+                <p><strong>✅ Funciona Offline</strong> - Sin conexión a internet</p>
+                <p><strong>💾 Datos Locales</strong> - Almacenados en tu dispositivo</p>
+                <p><strong>🔒 Privacidad Total</strong> - Nadie puede acceder</p>
+                <p><strong>🚀 PWA Instalable</strong> - Como app nativa</p>
+                <p><strong>⚡ Rápido y Seguro</strong> - Encripción AES-256</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para editar límite diario -->
+    <div id="limitModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center;">
+        <div style="background: white; border-radius: 15px; padding: 30px; max-width: 400px; width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+            <h2 style="margin-bottom: 20px; color: #667eea;">⚙️ Editar Límite Diario</h2>
+
+            <div class="form-group">
+                <label style="color: #333;">Límite Diario (en tu moneda)</label>
+                <div style="display: flex; align-items: center; border: 2px solid #e0e0e0; border-radius: 8px; overflow: hidden; margin-top: 8px;">
+                    <span style="padding: 12px; background: #f0f0f0; font-weight: 700; color: #667eea; font-family: 'Courier New', monospace; font-size: 1.1em;" id="currencySymbol">$</span>
+                    <input type="text" id="limitInput" placeholder="0" style="flex: 1; border: none; padding: 12px; font-size: 1em; font-family: 'Courier New', monospace; font-weight: 600;" oninput="formatLimitInput()">
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button onclick="saveDailyLimit()" class="btn btn-primary" style="flex: 1;">💾 Guardar</button>
+                <button onclick="closeLimitModal()" class="btn btn-secondary" style="flex: 1;">Cancelar</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Firma profesional -->
     <div class="footer">
@@ -916,108 +1128,6 @@
         window.addEventListener('online', updateConnectionStatus);
         window.addEventListener('offline', updateConnectionStatus);
 
-        // ============ Seguridad - Crypto API ============
-        async function encryptData(data, password) {
-            const encoder = new TextEncoder();
-            const dataBuffer = encoder.encode(JSON.stringify(data));
-            const passwordBuffer = encoder.encode(password);
-            
-            // Generar salt aleatorio
-            const salt = crypto.getRandomValues(new Uint8Array(16));
-            
-            // Derivar clave desde la contraseña
-            const key = await crypto.subtle.importKey(
-                'raw',
-                passwordBuffer,
-                { name: 'PBKDF2' },
-                false,
-                ['deriveKey']
-            );
-            
-            const derivedKey = await crypto.subtle.deriveKey(
-                {
-                    name: 'PBKDF2',
-                    salt: salt,
-                    iterations: 100000,
-                    hash: 'SHA-256'
-                },
-                key,
-                { name: 'AES-GCM', length: 256 },
-                false,
-                ['encrypt']
-            );
-            
-            // IV aleatorio
-            const iv = crypto.getRandomValues(new Uint8Array(12));
-            
-            // Encriptar
-            const encrypted = await crypto.subtle.encrypt(
-                { name: 'AES-GCM', iv: iv },
-                derivedKey,
-                dataBuffer
-            );
-            
-            // Combinar salt + iv + encrypted
-            const result = new Uint8Array(salt.length + iv.length + encrypted.byteLength);
-            result.set(salt, 0);
-            result.set(iv, salt.length);
-            result.set(new Uint8Array(encrypted), salt.length + iv.length);
-            
-            return btoa(String.fromCharCode(...result));
-        }
-
-        async function decryptData(encryptedData, password) {
-            try {
-                const binaryData = atob(encryptedData);
-                const dataBuffer = new Uint8Array(binaryData.length);
-                for (let i = 0; i < binaryData.length; i++) {
-                    dataBuffer[i] = binaryData.charCodeAt(i);
-                }
-                
-                // Extraer salt, iv, encrypted
-                const salt = dataBuffer.slice(0, 16);
-                const iv = dataBuffer.slice(16, 28);
-                const encrypted = dataBuffer.slice(28);
-                
-                // Derivar clave
-                const encoder = new TextEncoder();
-                const passwordBuffer = encoder.encode(password);
-                const key = await crypto.subtle.importKey(
-                    'raw',
-                    passwordBuffer,
-                    { name: 'PBKDF2' },
-                    false,
-                    ['deriveKey']
-                );
-                
-                const derivedKey = await crypto.subtle.deriveKey(
-                    {
-                        name: 'PBKDF2',
-                        salt: salt,
-                        iterations: 100000,
-                        hash: 'SHA-256'
-                    },
-                    key,
-                    { name: 'AES-GCM', length: 256 },
-                    false,
-                    ['decrypt']
-                );
-                
-                // Desencriptar
-                const decrypted = await crypto.subtle.decrypt(
-                    { name: 'AES-GCM', iv: iv },
-                    derivedKey,
-                    encrypted
-                );
-                
-                const decoder = new TextDecoder();
-                return JSON.parse(decoder.decode(decrypted));
-            } catch (error) {
-                console.error('Error desencriptando:', error);
-                return null;
-            }
-        }
-
         // ============ Datos y Variables ============
         let expenses = [];
         let books = [];
@@ -1025,6 +1135,7 @@
         let currentCurrency = 'COP';
         let encryptionEnabled = false;
         let encryptionPassword = '';
+        let dailyLimit = 100000; // Límite por defecto
 
         const exchangeRates = {
             'COP': 1, 'USD': 0.00025, 'EUR': 0.00023,
@@ -1051,38 +1162,18 @@
                 document.getElementById('currency').value = currentCurrency;
             }
 
+            updateCurrencyDisplay();
             updateExpenseTable();
             updateDashboard();
+            updateSpendingMeter();
         }
 
         // Cargar todos los datos
         async function loadAllData() {
             try {
-                // Verificar si hay datos encriptados
-                const encryptedData = localStorage.getItem('encryptedData');
-                if (encryptedData && localStorage.getItem('encryptionEnabled') === 'true') {
-                    const password = prompt('🔐 Ingresa tu contraseña para acceder a tus datos:');
-                    if (!password) {
-                        console.log('Acceso denegado - Sin contraseña');
-                        return;
-                    }
-
-                    const decrypted = await decryptData(encryptedData, password);
-                    if (decrypted) {
-                        expenses = decrypted.expenses || [];
-                        books = decrypted.books || [];
-                        encryptionPassword = password;
-                        encryptionEnabled = true;
-                        console.log('✅ Datos desencriptados');
-                    } else {
-                        alert('❌ Contraseña incorrecta');
-                        return;
-                    }
-                } else {
-                    expenses = (await getFromDB('expenses')) || [];
-                    books = (await getFromDB('books')) || [];
-                }
-
+                dailyLimit = localStorage.getItem('dailyLimit') ? parseFloat(localStorage.getItem('dailyLimit')) : 100000;
+                expenses = (await getFromDB('expenses')) || [];
+                books = (await getFromDB('books')) || [];
                 currentCurrency = localStorage.getItem('currency') || 'COP';
                 currentBook = localStorage.getItem('currentBook');
                 console.log('✅ Datos cargados correctamente');
@@ -1091,9 +1182,7 @@
             }
         }
 
-        // Setup Event Listeners
         function setupEventListeners() {
-            // Recuperar estado de encripción
             const savedEncryptionState = localStorage.getItem('encryptionEnabled');
             if (savedEncryptionState === 'true') {
                 encryptionEnabled = true;
@@ -1101,74 +1190,18 @@
             }
         }
 
-        // ============ Funciones de Seguridad ============
-        function showSecurityInfo() {
-            const modal = document.getElementById('securityModal');
-            modal.style.display = 'flex';
-            
-            if (encryptionEnabled) {
-                document.getElementById('encryptionInfo').style.display = 'block';
-                document.getElementById('encryptionStatus').textContent = '✅ Datos Encriptados con AES-256';
-            }
-        }
-
-        function closeSecurityModal() {
-            document.getElementById('securityModal').style.display = 'none';
-        }
-
-        async function enableEncryption() {
-            const password = document.getElementById('securityPassword').value;
-            const passwordConfirm = document.getElementById('securityPasswordConfirm').value;
-
-            if (!password || !passwordConfirm) {
-                alert('❌ Por favor ingresa una contraseña');
-                return;
-            }
-
-            if (password.length < 8) {
-                alert('❌ La contraseña debe tener mínimo 8 caracteres');
-                return;
-            }
-
-            if (password !== passwordConfirm) {
-                alert('❌ Las contraseñas no coinciden');
-                return;
-            }
-
-            // Encriptar todos los datos
-            const allData = { expenses, books };
-            const encrypted = await encryptData(allData, password);
-
-            // Guardar encriptado
-            localStorage.setItem('encryptedData', encrypted);
-            localStorage.setItem('encryptionEnabled', 'true');
-
-            encryptionPassword = password;
-            encryptionEnabled = true;
-
-            // Limpiar campos
-            document.getElementById('securityPassword').value = '';
-            document.getElementById('securityPasswordConfirm').value = '';
-
-            updateEncryptionUI();
-            alert('🔐 ¡Encripción activada! Tus datos están protegidos.');
-            closeSecurityModal();
-        }
-
-        function updateEncryptionUI() {
-            const btn = document.querySelector('.floating-help-btn');
-            if (encryptionEnabled) {
-                btn.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)';
-                btn.title = '🔐 Datos Encriptados';
-            }
-        }
-
         // ============ Funciones de Moneda ============
         function changeCurrency() {
             currentCurrency = document.getElementById('currency').value;
             localStorage.setItem('currency', currentCurrency);
+            updateCurrencyDisplay();
             updateExpenseTable();
             updateDashboard();
+            updateSpendingMeter();
+        }
+
+        function updateCurrencyDisplay() {
+            document.getElementById('currencySymbol').textContent = currencySymbols[currentCurrency];
         }
 
         function convertToCurrentCurrency(amountInCOP) {
@@ -1184,6 +1217,96 @@
             } else {
                 const formatted = converted.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                 return symbol + formatted;
+            }
+        }
+
+        // ============ Formato de entrada ============
+        function formatMontoInput() {
+            let input = document.getElementById('monto');
+            let value = input.value.replace(/[^0-9]/g, '');
+            if (value === '') {
+                input.value = '';
+                return;
+            }
+            let number = parseInt(value);
+            input.value = number.toLocaleString('es-CO');
+        }
+
+        function formatPresupuestoInput(input) {
+            let value = input.value.replace(/[^0-9]/g, '');
+            if (value === '') {
+                input.value = '';
+                return;
+            }
+            let number = parseInt(value);
+            input.value = number.toLocaleString('es-CO');
+        }
+
+        function formatLimitInput() {
+            let input = document.getElementById('limitInput');
+            let value = input.value.replace(/[^0-9]/g, '');
+            if (value === '') {
+                input.value = '';
+                return;
+            }
+            let number = parseInt(value);
+            input.value = number.toLocaleString('es-CO');
+        }
+
+        // ============ Medidor de Gasto Diario ============
+        function editDailyLimit() {
+            document.getElementById('limitInput').value = dailyLimit.toLocaleString('es-CO');
+            document.getElementById('limitModal').style.display = 'flex';
+        }
+
+        function closeLimitModal() {
+            document.getElementById('limitModal').style.display = 'none';
+        }
+
+        function saveDailyLimit() {
+            const limitText = document.getElementById('limitInput').value.replace(/[^0-9]/g, '');
+            const limit = parseFloat(limitText);
+
+            if (!limit || limit <= 0) {
+                alert('❌ Por favor ingresa un límite válido');
+                return;
+            }
+
+            dailyLimit = limit;
+            localStorage.setItem('dailyLimit', dailyLimit);
+            updateSpendingMeter();
+            closeLimitModal();
+            showMessage('✅ Límite diario actualizado', 'success');
+        }
+
+        function updateSpendingMeter() {
+            const today = new Date().toISOString().split('T')[0];
+            const todayExpenses = expenses.filter(e => e.fecha === today && (e.tipo === 'Gasto' || e.tipo === 'Gastos Hormiga')).reduce((sum, e) => sum + e.monto, 0);
+            
+            const percentage = (todayExpenses / dailyLimit) * 100;
+            const available = Math.max(0, dailyLimit - todayExpenses);
+
+            document.getElementById('limitDisplay').textContent = formatMoney(dailyLimit);
+            document.getElementById('todaySpent').textContent = formatMoney(todayExpenses);
+            document.getElementById('availableAmount').textContent = formatMoney(available);
+
+            const meterFill = document.getElementById('meterFill');
+            meterFill.style.width = Math.min(percentage, 100) + '%';
+            meterFill.textContent = percentage.toFixed(0) + '%';
+
+            const alertNeon = document.getElementById('alertNeon');
+
+            if (percentage > 100) {
+                meterFill.classList.add('danger');
+                meterFill.classList.remove('warning');
+                alertNeon.classList.add('show');
+            } else if (percentage > 80) {
+                meterFill.classList.remove('danger');
+                meterFill.classList.add('warning');
+                alertNeon.classList.remove('show');
+            } else {
+                meterFill.classList.remove('danger', 'warning');
+                alertNeon.classList.remove('show');
             }
         }
 
@@ -1204,17 +1327,6 @@
             } else if (tabName === 'libros') {
                 loadBooksList();
             }
-        }
-
-        function formatMontoInput() {
-            let input = document.getElementById('monto');
-            let value = input.value.replace(/[^0-9]/g, '');
-            if (value === '') {
-                input.value = '';
-                return;
-            }
-            let number = parseInt(value);
-            input.value = number.toLocaleString('es-CO');
         }
 
         async function addExpense(e) {
@@ -1248,6 +1360,7 @@
             document.getElementById('fecha').valueAsDate = new Date();
             updateExpenseTable();
             updateDashboard();
+            updateSpendingMeter();
             syncData();
         }
 
@@ -1271,7 +1384,7 @@
                     <td>${exp.categoria}</td>
                     <td>${exp.descripcion}</td>
                     <td>${formatMoney(exp.monto)}</td>
-                    <td><span style="padding: 5px 10px; border-radius: 5px; background: ${exp.tipo === 'Ingreso' ? '#d4edda' : '#f8d7da'}; color: ${exp.tipo === 'Ingreso' ? '#155724' : '#721c24'}">${exp.tipo}</span></td>
+                    <td><span style="padding: 5px 10px; border-radius: 5px; background: ${exp.tipo === 'Ingreso' ? '#d4edda' : exp.tipo === 'Gastos Hormiga' ? '#fff3cd' : '#f8d7da'}; color: ${exp.tipo === 'Ingreso' ? '#155724' : exp.tipo === 'Gastos Hormiga' ? '#856404' : '#721c24'}">${exp.tipo}</span></td>
                     <td><button onclick="deleteExpense(${exp.id})" class="btn btn-danger" style="padding: 5px 10px; font-size: 0.9em;">🗑️</button></td>
                 </tr>
             `).join('');
@@ -1283,6 +1396,7 @@
                 await deleteFromDB('expenses', id);
                 updateExpenseTable();
                 updateDashboard();
+                updateSpendingMeter();
                 showMessage('✅ Gasto eliminado', 'success');
             }
         }
@@ -1290,11 +1404,12 @@
         function updateDashboard() {
             const ingresos = expenses.filter(e => e.tipo === 'Ingreso').reduce((sum, e) => sum + e.monto, 0);
             const gastos = expenses.filter(e => e.tipo === 'Gasto').reduce((sum, e) => sum + e.monto, 0);
+            const gastosHormiga = expenses.filter(e => e.tipo === 'Gastos Hormiga').reduce((sum, e) => sum + e.monto, 0);
             const inversiones = expenses.filter(e => e.tipo === 'Inversión').reduce((sum, e) => sum + e.monto, 0);
-            const balance = ingresos - gastos - inversiones;
+            const balance = ingresos - gastos - gastosHormiga - inversiones;
 
             document.getElementById('totalIncome').textContent = formatMoney(ingresos);
-            document.getElementById('totalExpenses').textContent = formatMoney(gastos + inversiones);
+            document.getElementById('totalExpenses').textContent = formatMoney(gastos + gastosHormiga + inversiones);
             document.getElementById('netBalance').textContent = formatMoney(balance);
 
             if (balance < 0) {
@@ -1311,7 +1426,7 @@
             const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
             const monthlyData = new Array(12).fill(0);
 
-            expenses.filter(e => e.tipo === 'Gasto').forEach(exp => {
+            expenses.filter(e => e.tipo === 'Gasto' || e.tipo === 'Gastos Hormiga').forEach(exp => {
                 const month = new Date(exp.fecha).getMonth();
                 monthlyData[month] += exp.monto;
             });
@@ -1330,7 +1445,7 @@
         function updateCategoryChart() {
             const categoryData = {};
 
-            expenses.filter(e => e.tipo === 'Gasto').forEach(exp => {
+            expenses.filter(e => e.tipo === 'Gasto' || e.tipo === 'Gastos Hormiga').forEach(exp => {
                 categoryData[exp.categoria] = (categoryData[exp.categoria] || 0) + exp.monto;
             });
 
@@ -1357,7 +1472,25 @@
                 `).join('');
         }
 
-        // Funciones Libros
+        // ============ Seguridad ============
+        function showSecurityInfo() {
+            const modal = document.getElementById('securityModal');
+            modal.style.display = 'flex';
+        }
+
+        function closeSecurityModal() {
+            document.getElementById('securityModal').style.display = 'none';
+        }
+
+        function updateEncryptionUI() {
+            const btn = document.querySelector('.floating-help-btn');
+            if (encryptionEnabled) {
+                btn.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)';
+                btn.title = '🔐 Datos Encriptados';
+            }
+        }
+
+        // ============ Funciones Libros ============
         async function createBook() {
             const nombre = document.getElementById('nombreLibro').value.trim();
             const color = document.getElementById('colorLibro').value;
@@ -1438,7 +1571,7 @@
             setTimeout(() => msgDiv.className = 'message', 4000);
         }
 
-        // Funciones Presupuesto
+        // ============ Funciones Presupuesto ============
         let budgets = [];
 
         async function addBudget() {
@@ -1470,7 +1603,7 @@
             }
 
             container.innerHTML = budgets.map(budget => {
-                const gastoCategoria = expenses.filter(e => e.categoria === budget.categoria && e.tipo === 'Gasto').reduce((sum, e) => sum + e.monto, 0);
+                const gastoCategoria = expenses.filter(e => e.categoria === budget.categoria && (e.tipo === 'Gasto' || e.tipo === 'Gastos Hormiga')).reduce((sum, e) => sum + e.monto, 0);
                 const porcentaje = (gastoCategoria / budget.monto) * 100;
                 const estado = porcentaje > 100 ? '🔴 Excedido' : porcentaje > 80 ? '🟡 Alerta' : '🟢 Ok';
                 const color = porcentaje > 100 ? '#ff6b6b' : porcentaje > 80 ? '#ffc107' : '#4caf50';
@@ -1510,7 +1643,7 @@
             setTimeout(() => msgDiv.className = 'message', 4000);
         }
 
-        // Funciones Reportes
+        // ============ Funciones Reportes ============
         function filterExpenses() {
             const searchText = document.getElementById('searchText').value.toLowerCase();
             const filterCategory = document.getElementById('filterCategory').value;
@@ -1537,7 +1670,7 @@
                     <td>${exp.categoria}</td>
                     <td>${exp.descripcion}</td>
                     <td>${formatMoney(exp.monto)}</td>
-                    <td><span style="padding: 5px 10px; border-radius: 5px; background: ${exp.tipo === 'Ingreso' ? '#d4edda' : '#f8d7da'}; color: ${exp.tipo === 'Ingreso' ? '#155724' : '#721c24'}">${exp.tipo}</span></td>
+                    <td><span style="padding: 5px 10px; border-radius: 5px; background: ${exp.tipo === 'Ingreso' ? '#d4edda' : exp.tipo === 'Gastos Hormiga' ? '#fff3cd' : '#f8d7da'}; color: ${exp.tipo === 'Ingreso' ? '#155724' : exp.tipo === 'Gastos Hormiga' ? '#856404' : '#721c24'}">${exp.tipo}</span></td>
                 </tr>
             `).join('');
         }
@@ -1550,7 +1683,7 @@
                 return expDate.getMonth() === today.getMonth() && expDate.getFullYear() === today.getFullYear();
             });
 
-            const totalGastos = monthExpenses.filter(e => e.tipo === 'Gasto').reduce((sum, e) => sum + e.monto, 0);
+            const totalGastos = monthExpenses.filter(e => e.tipo === 'Gasto' || e.tipo === 'Gastos Hormiga').reduce((sum, e) => sum + e.monto, 0);
             const totalIngresos = monthExpenses.filter(e => e.tipo === 'Ingreso').reduce((sum, e) => sum + e.monto, 0);
 
             alert(`Reporte del mes de ${currentMonth}\n\nTotal Ingresos: ${formatMoney(totalIngresos)}\nTotal Gastos: ${formatMoney(totalGastos)}\nBalance: ${formatMoney(totalIngresos - totalGastos)}`);
@@ -1560,7 +1693,7 @@
             const currentYear = new Date().getFullYear();
             const yearExpenses = expenses.filter(e => new Date(e.fecha).getFullYear() === currentYear);
 
-            const totalGastos = yearExpenses.filter(e => e.tipo === 'Gasto').reduce((sum, e) => sum + e.monto, 0);
+            const totalGastos = yearExpenses.filter(e => e.tipo === 'Gasto' || e.tipo === 'Gastos Hormiga').reduce((sum, e) => sum + e.monto, 0);
             const totalIngresos = yearExpenses.filter(e => e.tipo === 'Ingreso').reduce((sum, e) => sum + e.monto, 0);
 
             alert(`Reporte Anual ${currentYear}\n\nTotal Ingresos: ${formatMoney(totalIngresos)}\nTotal Gastos: ${formatMoney(totalGastos)}\nBalance: ${formatMoney(totalIngresos - totalGastos)}`);
@@ -1571,7 +1704,7 @@
             content += `Generado: ${new Date().toLocaleDateString()}\n\n`;
             content += 'RESUMEN:\n';
             content += `Total Ingresos: ${formatMoney(expenses.filter(e => e.tipo === 'Ingreso').reduce((sum, e) => sum + e.monto, 0))}\n`;
-            content += `Total Gastos: ${formatMoney(expenses.filter(e => e.tipo === 'Gasto').reduce((sum, e) => sum + e.monto, 0))}\n\n`;
+            content += `Total Gastos: ${formatMoney(expenses.filter(e => e.tipo === 'Gasto' || e.tipo === 'Gastos Hormiga').reduce((sum, e) => sum + e.monto, 0))}\n\n`;
             content += 'DETALLE DE GASTOS:\n';
             expenses.forEach(exp => {
                 content += `${exp.fecha} | ${exp.categoria} | ${exp.descripcion} | ${formatMoney(exp.monto)}\n`;
@@ -1616,9 +1749,6 @@
 
             try {
                 console.log('🔄 Sincronizando datos...');
-                // Aquí iría la lógica para sincronizar con servidor
-                // Por ahora, solo mostramos el indicador
-                
                 setTimeout(() => {
                     syncIndicator.classList.remove('show');
                     console.log('✅ Sincronización completada');
@@ -1629,14 +1759,13 @@
             }
         }
 
-        // Sincronizar cuando vuelva la conexión
         window.addEventListener('online', () => {
             console.log('🌐 Conexión restaurada - Sincronizando...');
             syncData();
         });
 
-        // Inicializar todo
         init();
     </script>
 </body>
 </html>
+
