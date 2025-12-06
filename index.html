@@ -1,4 +1,26 @@
 <!DOCTYPE html>
+<!-- 🚨 PROTECCIÓN ANTI-COPIA - NO ELIMINAR -->
+<script>
+(function(){
+    // ANTI-ROBO: Marca de agua única
+    const WMK = btoa('GITHUB-'+navigator.userAgent+'-'+Date.now());
+    console.log('🔒 WMK:'+WMK);
+    
+    // ANTI-DEBUG
+    if(window.console && console.log) {
+        setTimeout(()=>{
+            if(confirm('¿Desarrollador detectado?')) {
+                document.body.innerHTML='<h1>🔒 Propiedad Privada</h1>';
+            }
+        }, 5000);
+    }
+    
+    // ANTI-COPY
+    document.addEventListener('contextmenu', e=>e.preventDefault());
+    document.addEventListener('selectstart', e=>e.preventDefault());
+})();
+</script>
+
 <html lang="es">
 <head>
     <meta charset="UTF-8">
