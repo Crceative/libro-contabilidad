@@ -2,6 +2,96 @@
 <html lang="es">
 
 <head>
+
+    <script>
+        // 🚨 ANTI-ROBO MEJORADO - Detecta intento de DEBUG
+        (function () {
+            const WMK = btoa('PROTEGIDO-' + Date.now() + '-' + navigator.userAgent);
+            console.log('🔒 WMK:' + WMK);
+
+            let devtoolsOpen = false;
+            let debugAttempts = 0;
+
+            // DETECTAR si abren DevTools MANUALMENTE (no bloqueando uso normal)
+            const devtoolsDetector = setInterval(() => {
+                const start = performance.now();
+                //debugger;  // Pausa artificial
+                const end = performance.now();
+
+                // Si debugger tardó mucho = DevTools abierto
+                if (end - start > 100) {
+                    devtoolsOpen = true;
+                    debugAttempts++;
+
+                    // Solo bloquea después de 3 intentos
+                    if (debugAttempts >= 3) {
+                        document.body.innerHTML = `
+                    <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:linear-gradient(135deg,#667eea,#764ba2)">
+                        <div style="text-align:center;color:white">
+                            <h1>🔒 Acceso Denegado</h1>
+                            <p>Este código está protegido</p>
+                            <p style="font-size:0.9em;opacity:0.8">Cierra DevTools para continuar</p>
+                        </div>
+                    </div>
+                `;
+                        clearInterval(devtoolsDetector);
+                        return;
+                    }
+                }
+            }, 500);
+
+            // ANTI-COPY - Bloquea copiar contenido
+            document.addEventListener('copy', (e) => {
+                e.preventDefault();
+                console.warn('⚠️ Copia de contenido bloqueada');
+                return false;
+            });
+
+            // ANTI-CLICK-DERECHO (solo en tabla de datos sensibles)
+            document.addEventListener('contextmenu', (e) => {
+                if (e.target.closest('table') || e.target.closest('[data-protected]')) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            // ANTI-SELECT (solo datos sensibles)
+            document.addEventListener('selectstart', (e) => {
+                if (e.target.closest('[data-protected]')) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            // BLOQUEAR F12 (sin afectar app)
+            document.addEventListener('keydown', (e) => {
+                if (e.keyCode === 123) { // F12
+                    e.preventDefault();
+                    console.warn('⚠️ F12 bloqueado en esta aplicación');
+                    return false;
+                }
+
+                // Ctrl+Shift+I (inspeccionar)
+                if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
+                    e.preventDefault();
+                    return false;
+                }
+
+                // Ctrl+Shift+C (seleccionar elemento)
+                if (e.ctrlKey && e.shiftKey && e.keyCode === 67) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            // ADVERTENCIA en consola (divertida pero educada)
+            console.log('%c⚠️ ADVERTENCIA', 'color: red; font-size: 20px; font-weight: bold');
+            console.log('%cEsta aplicación está protegida por derechos de autor', 'color: orange; font-size: 14px');
+            console.log('%cNO está permitido: copiar código, robar contenido, o vender como propio', 'color: red');
+            console.log('%c✅ Está permitido: usar la aplicación, reportar bugs, solicitar licencia', 'color: green');
+        })();
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#667eea">
