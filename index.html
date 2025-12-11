@@ -1,108 +1,22 @@
 <!DOCTYPE html>
-<!-- 🚨 PROTECCIÓN ANTI-COPIA - NO ELIMINAR -->
-<script>
-// 🚨 ANTI-ROBO MEJORADO - Detecta intento de DEBUG
-(function(){
-    const WMK = btoa('PROTEGIDO-'+Date.now()+'-'+navigator.userAgent);
-    console.log('🔒 WMK:'+WMK);
-    
-    let devtoolsOpen = false;
-    let debugAttempts = 0;
-    
-    // DETECTAR si abren DevTools MANUALMENTE (no bloqueando uso normal)
-    const devtoolsDetector = setInterval(()=>{
-        const start = performance.now();
-        debugger;  // Pausa artificial
-        const end = performance.now();
-        
-        // Si debugger tardó mucho = DevTools abierto
-        if(end - start > 100) {
-            devtoolsOpen = true;
-            debugAttempts++;
-            
-            // Solo bloquea después de 3 intentos
-            if(debugAttempts >= 3) {
-                document.body.innerHTML = `
-                    <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:linear-gradient(135deg,#667eea,#764ba2)">
-                        <div style="text-align:center;color:white">
-                            <h1>🔒 Acceso Denegado</h1>
-                            <p>Este código está protegido</p>
-                            <p style="font-size:0.9em;opacity:0.8">Cierra DevTools para continuar</p>
-                        </div>
-                    </div>
-                `;
-                clearInterval(devtoolsDetector);
-                return;
-            }
-        }
-    }, 500);
-    
-    // ANTI-COPY - Bloquea copiar contenido
-    document.addEventListener('copy', (e) => {
-        e.preventDefault();
-        console.warn('⚠️ Copia de contenido bloqueada');
-        return false;
-    });
-    
-    // ANTI-CLICK-DERECHO (solo en tabla de datos sensibles)
-    document.addEventListener('contextmenu', (e) => {
-        if(e.target.closest('table') || e.target.closest('[data-protected]')) {
-            e.preventDefault();
-            return false;
-        }
-    });
-    
-    // ANTI-SELECT (solo datos sensibles)
-    document.addEventListener('selectstart', (e) => {
-        if(e.target.closest('[data-protected]')) {
-            e.preventDefault();
-            return false;
-        }
-    });
-    
-    // BLOQUEAR F12 (sin afectar app)
-    document.addEventListener('keydown', (e) => {
-        if(e.keyCode === 123) { // F12
-            e.preventDefault();
-            console.warn('⚠️ F12 bloqueado en esta aplicación');
-            return false;
-        }
-        
-        // Ctrl+Shift+I (inspeccionar)
-        if(e.ctrlKey && e.shiftKey && e.keyCode === 73) {
-            e.preventDefault();
-            return false;
-        }
-        
-        // Ctrl+Shift+C (seleccionar elemento)
-        if(e.ctrlKey && e.shiftKey && e.keyCode === 67) {
-            e.preventDefault();
-            return false;
-        }
-    });
-    
-    // ADVERTENCIA en consola (divertida pero educada)
-    console.log('%c⚠️ ADVERTENCIA', 'color: red; font-size: 20px; font-weight: bold');
-    console.log('%cEsta aplicación está protegida por derechos de autor', 'color: orange; font-size: 14px');
-    console.log('%cNO está permitido: copiar código, robar contenido, o vender como propio', 'color: red');
-    console.log('%c✅ Está permitido: usar la aplicación, reportar bugs, solicitar licencia', 'color: green');
-})();
-</script>
-
-
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#667eea">
-    <meta name="description" content="Aplicación de gestión de gastos e ingresos con análisis financiero completo. Funciona offline.">
+    <meta name="description"
+        content="Aplicación de gestión de gastos e ingresos con análisis financiero completo. Funciona offline.">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Contabilidad">
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23667eea' width='192' height='192'/><text x='96' y='140' font-size='100' fill='white' text-anchor='middle'>📘</text></svg>">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%23667eea' width='180' height='180' rx='40'/><text x='90' y='135' font-size='100' fill='white' text-anchor='middle'>📘</text></svg>">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23667eea' width='192' height='192'/><text x='96' y='140' font-size='100' fill='white' text-anchor='middle'>📘</text></svg>">
+    <link rel="apple-touch-icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%23667eea' width='180' height='180' rx='40'/><text x='90' y='135' font-size='100' fill='white' text-anchor='middle'>📘</text></svg>">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-Frame-Options" content="DENY">
@@ -138,6 +52,7 @@
             body {
                 padding: 12px;
             }
+
             .container {
                 padding: 0 8px;
             }
@@ -147,6 +62,7 @@
             body {
                 padding: 10px;
             }
+
             .container {
                 padding: 0 5px;
             }
@@ -156,6 +72,7 @@
             body {
                 padding: 8px;
             }
+
             .container {
                 padding: 0 3px;
             }
@@ -169,14 +86,14 @@
             background: linear-gradient(135deg, var(--header-primary, #667eea) 0%, var(--header-secondary, #764ba2) 100%);
             padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             transition: background 0.4s ease;
         }
 
         .header h1 {
             font-size: clamp(1.8em, 5vw, 2.5em);
             margin-bottom: 5px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .header-subtitle {
@@ -202,7 +119,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             animation: slideIn 0.3s ease-out;
         }
 
@@ -221,6 +138,7 @@
                 transform: translateX(300px);
                 opacity: 0;
             }
+
             to {
                 transform: translateX(0);
                 opacity: 1;
@@ -236,8 +154,15 @@
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
         }
 
         @media (max-width: 480px) {
@@ -267,13 +192,13 @@
             font-size: clamp(0.75em, 2vw, 1em);
             font-weight: 600;
             transition: all 0.3s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             white-space: nowrap;
         }
 
         .tab-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
 
         .tab-button.active {
@@ -287,7 +212,7 @@
             background: white;
             border-radius: 15px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             animation: fadeIn 0.3s;
         }
 
@@ -296,8 +221,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Formulario de gastos */
@@ -407,7 +339,8 @@
             color: white;
         }
 
-        th, td {
+        th,
+        td {
             padding: clamp(8px, 2vw, 15px);
             text-align: left;
             border-bottom: 1px solid #e0e0e0;
@@ -435,7 +368,7 @@
             padding: clamp(15px, 4vw, 25px);
             border-radius: 12px;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .stat-card h3 {
@@ -614,10 +547,13 @@
         }
 
         @keyframes neonPulse {
-            0%, 100% { 
+
+            0%,
+            100% {
                 box-shadow: inset 0 0 10px #ff006e, 0 0 20px #ff006e;
             }
-            50% { 
+
+            50% {
                 box-shadow: inset 0 0 20px #ff006e, 0 0 40px #ff006e;
             }
         }
@@ -643,11 +579,14 @@
         }
 
         @keyframes neonBlink {
-            0%, 100% { 
+
+            0%,
+            100% {
                 opacity: 1;
                 box-shadow: 0 0 20px #ff006e, inset 0 0 10px rgba(255, 0, 110, 0.3);
             }
-            50% { 
+
+            50% {
                 opacity: 0.7;
                 box-shadow: 0 0 40px #ff006e, inset 0 0 20px rgba(255, 0, 110, 0.5);
             }
@@ -659,7 +598,7 @@
             bottom: 10px;
             left: 15px;
             font-size: 0.75em;
-            color: rgba(255,255,255,0.6);
+            color: rgba(255, 255, 255, 0.6);
             font-family: 'Courier New', monospace;
             z-index: 1000;
         }
@@ -670,7 +609,7 @@
             left: 50%;
             transform: translateX(-50%);
             padding: 8px 15px;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0, 0, 0, 0.7);
             color: white;
             border-radius: 20px;
             font-size: 0.85em;
@@ -684,6 +623,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Indicador de conexión -->
     <div id="connectionStatus" class="connection-status online">
@@ -702,7 +642,8 @@
             <p id="headerSubtitle" class="header-subtitle">Gestión de gastos e ingresos</p>
             <div style="margin-top: 15px;">
                 <label for="currency" style="color: white; font-weight: 600; margin-right: 10px;">💱 Moneda:</label>
-                <select id="currency" onchange="changeCurrency()" style="padding: 8px 12px; border-radius: 5px; border: none; font-weight: 600;">
+                <select id="currency" onchange="changeCurrency()"
+                    style="padding: 8px 12px; border-radius: 5px; border: none; font-weight: 600;">
                     <option value="COP">🇨🇴 COP - Peso Colombiano</option>
                     <option value="USD">🇺🇸 USD - Dólar Estadounidense</option>
                     <option value="EUR">🇪🇺 EUR - Euro</option>
@@ -762,7 +703,8 @@
             <div class="spending-meter">
                 <div class="meter-header">
                     <h3>🎯 Mi Límite Diario</h3>
-                    <button onclick="editDailyLimit()" class="btn btn-primary" style="flex: 0; min-width: auto; padding: 8px 16px;">✏️ Editar</button>
+                    <button onclick="editDailyLimit()" class="btn btn-primary"
+                        style="flex: 0; min-width: auto; padding: 8px 16px;">✏️ Editar</button>
                 </div>
                 <div class="meter-info">
                     <div class="meter-info-item">
@@ -816,9 +758,13 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="monto">💵 Monto</label>
-                        <div style="display: flex; align-items: center; border: 2px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
-                            <span style="padding: 12px; background: #f0f0f0; font-weight: 700; color: #667eea; font-family: 'Courier New', monospace; font-size: 1.1em;">$</span>
-                            <input type="text" id="monto" placeholder="0" style="flex: 1; border: none; padding: 12px; font-size: 1em; font-family: 'Courier New', monospace; font-weight: 600;" oninput="formatMontoInput()" required>
+                        <div
+                            style="display: flex; align-items: center; border: 2px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+                            <span
+                                style="padding: 12px; background: #f0f0f0; font-weight: 700; color: #667eea; font-family: 'Courier New', monospace; font-size: 1.1em;">$</span>
+                            <input type="text" id="monto" placeholder="0"
+                                style="flex: 1; border: none; padding: 12px; font-size: 1em; font-family: 'Courier New', monospace; font-weight: 600;"
+                                oninput="formatMontoInput()" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -852,7 +798,9 @@
                         </tr>
                     </thead>
                     <tbody id="expenseBody">
-                        <tr><td colspan="6" style="text-align: center; padding: 30px;">📭 No hay gastos registrados</td></tr>
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 30px;">📭 No hay gastos registrados</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -864,13 +812,15 @@
             <div id="messageLibros" class="message"></div>
 
             <!-- Si hay libro activo, mostrar header especial -->
-            <div id="activeBookHeader" style="display: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 12px; margin-bottom: 30px;">
+            <div id="activeBookHeader"
+                style="display: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 12px; margin-bottom: 30px;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <div>
                         <h3 id="activeBookTitle" style="margin: 0 0 5px 0;">📖 Nombre del Libro</h3>
                         <p id="activeBookStats" style="margin: 0; opacity: 0.9;">0 gastos registrados en este libro</p>
                     </div>
-                    <button onclick="exitBook()" class="btn btn-secondary" style="flex: 0; min-width: auto; padding: 8px 16px;">❌ Salir del Libro</button>
+                    <button onclick="exitBook()" class="btn btn-secondary"
+                        style="flex: 0; min-width: auto; padding: 8px 16px;">❌ Salir del Libro</button>
                 </div>
             </div>
 
@@ -899,7 +849,8 @@
 
             <!-- Lista de libros -->
             <h3 id="booksListTitle">Mis Libros:</h3>
-            <div id="booksList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
+            <div id="booksList"
+                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
             </div>
         </div>
 
@@ -927,9 +878,13 @@
                     </div>
                     <div class="form-group">
                         <label for="budgetMonto">💰 Monto Presupuestado</label>
-                        <div style="display: flex; align-items: center; border: 2px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
-                            <span style="padding: 12px; background: #f0f0f0; font-weight: 700; color: #667eea; font-family: 'Courier New', monospace; font-size: 1.1em;">$</span>
-                            <input type="text" id="budgetMonto" placeholder="0" style="flex: 1; border: none; padding: 12px; font-size: 1em; font-family: 'Courier New', monospace; font-weight: 600;" oninput="formatPresupuestoInput(this)" required>
+                        <div
+                            style="display: flex; align-items: center; border: 2px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+                            <span
+                                style="padding: 12px; background: #f0f0f0; font-weight: 700; color: #667eea; font-family: 'Courier New', monospace; font-size: 1.1em;">$</span>
+                            <input type="text" id="budgetMonto" placeholder="0"
+                                style="flex: 1; border: none; padding: 12px; font-size: 1em; font-family: 'Courier New', monospace; font-weight: 600;"
+                                oninput="formatPresupuestoInput(this)" required>
                         </div>
                     </div>
                 </div>
@@ -937,7 +892,8 @@
             </div>
 
             <h3>Presupuestos Activos:</h3>
-            <div id="budgetList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
+            <div id="budgetList"
+                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
             </div>
         </div>
 
@@ -1002,7 +958,9 @@
                         </tr>
                     </thead>
                     <tbody id="filteredExpenseBody">
-                        <tr><td colspan="5" style="text-align: center; padding: 30px;">📭 No hay gastos</td></tr>
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 30px;">📭 No hay gastos</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -1022,12 +980,42 @@
                         </tr>
                     </thead>
                     <tbody id="cashFlowBody">
-                        <tr><td>2025</td><td>$0.00</td><td>$0.00</td><td>$0.00</td></tr>
-                        <tr><td>2026</td><td>$0.00</td><td>$0.00</td><td>$0.00</td></tr>
-                        <tr><td>2027</td><td>$0.00</td><td>$0.00</td><td>$0.00</td></tr>
-                        <tr><td>2028</td><td>$0.00</td><td>$0.00</td><td>$0.00</td></tr>
-                        <tr><td>2029</td><td>$0.00</td><td>$0.00</td><td>$0.00</td></tr>
-                        <tr><td>2030</td><td>$0.00</td><td>$0.00</td><td>$0.00</td></tr>
+                        <tr>
+                            <td>2025</td>
+                            <td>$0.00</td>
+                            <td>$0.00</td>
+                            <td>$0.00</td>
+                        </tr>
+                        <tr>
+                            <td>2026</td>
+                            <td>$0.00</td>
+                            <td>$0.00</td>
+                            <td>$0.00</td>
+                        </tr>
+                        <tr>
+                            <td>2027</td>
+                            <td>$0.00</td>
+                            <td>$0.00</td>
+                            <td>$0.00</td>
+                        </tr>
+                        <tr>
+                            <td>2028</td>
+                            <td>$0.00</td>
+                            <td>$0.00</td>
+                            <td>$0.00</td>
+                        </tr>
+                        <tr>
+                            <td>2029</td>
+                            <td>$0.00</td>
+                            <td>$0.00</td>
+                            <td>$0.00</td>
+                        </tr>
+                        <tr>
+                            <td>2030</td>
+                            <td>$0.00</td>
+                            <td>$0.00</td>
+                            <td>$0.00</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -1045,12 +1033,30 @@
                         </tr>
                     </thead>
                     <tbody id="proyectionBody">
-                        <tr><td>2025</td><td>$0.00</td></tr>
-                        <tr><td>2026</td><td>$0.00</td></tr>
-                        <tr><td>2027</td><td>$0.00</td></tr>
-                        <tr><td>2028</td><td>$0.00</td></tr>
-                        <tr><td>2029</td><td>$0.00</td></tr>
-                        <tr><td>2030</td><td>$0.00</td></tr>
+                        <tr>
+                            <td>2025</td>
+                            <td>$0.00</td>
+                        </tr>
+                        <tr>
+                            <td>2026</td>
+                            <td>$0.00</td>
+                        </tr>
+                        <tr>
+                            <td>2027</td>
+                            <td>$0.00</td>
+                        </tr>
+                        <tr>
+                            <td>2028</td>
+                            <td>$0.00</td>
+                        </tr>
+                        <tr>
+                            <td>2029</td>
+                            <td>$0.00</td>
+                        </tr>
+                        <tr>
+                            <td>2030</td>
+                            <td>$0.00</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -1061,37 +1067,49 @@
     <button class="floating-help-btn" onclick="showSecurityInfo()" title="Información y Seguridad">ℹ️</button>
 
     <!-- Modal de Seguridad -->
-    <div id="securityModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center;">
-        <div style="background: white; border-radius: 15px; padding: 30px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+    <div id="securityModal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center;">
+        <div
+            style="background: white; border-radius: 15px; padding: 30px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
             <h2 style="margin-bottom: 20px; color: #667eea;">🔐 Seguridad y Privacidad</h2>
 
             <div id="securityInfo" style="display: none;">
-                <div style="background: #d4edda; border-left: 4px solid #28a745; padding: 15px; margin-bottom: 20px; border-radius: 5px;">
-                    <p id="encryptionStatus" style="margin: 0; color: #155724; font-weight: 600;">✅ Datos Encriptados con AES-256</p>
+                <div
+                    style="background: #d4edda; border-left: 4px solid #28a745; padding: 15px; margin-bottom: 20px; border-radius: 5px;">
+                    <p id="encryptionStatus" style="margin: 0; color: #155724; font-weight: 600;">✅ Datos Encriptados
+                        con AES-256</p>
                 </div>
-                <p style="color: #666; margin-bottom: 15px;">Tus datos están protegidos con encripción de nivel militar.</p>
-                <button onclick="closeSecurityModal()" class="btn btn-primary" style="width: 100%; margin-top: 20px;">Cerrar</button>
+                <p style="color: #666; margin-bottom: 15px;">Tus datos están protegidos con encripción de nivel militar.
+                </p>
+                <button onclick="closeSecurityModal()" class="btn btn-primary"
+                    style="width: 100%; margin-top: 20px;">Cerrar</button>
             </div>
 
             <div id="encryptionSetup" style="display: block;">
                 <h3 style="color: #333; margin-bottom: 15px;">🔑 Activar Encripción</h3>
-                <p style="color: #666; margin-bottom: 15px; font-size: 0.9em;">Protege tus datos con una contraseña personal. Solo tú podrás acceder.</p>
+                <p style="color: #666; margin-bottom: 15px; font-size: 0.9em;">Protege tus datos con una contraseña
+                    personal. Solo tú podrás acceder.</p>
 
                 <div class="form-group">
                     <label style="color: #333;">Contraseña (mín. 8 caracteres)</label>
-                    <input type="password" id="securityPassword" placeholder="Ingresa tu contraseña" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; margin-top: 8px;">
+                    <input type="password" id="securityPassword" placeholder="Ingresa tu contraseña"
+                        style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; margin-top: 8px;">
                 </div>
 
                 <div class="form-group">
                     <label style="color: #333;">Confirmar Contraseña</label>
-                    <input type="password" id="securityPasswordConfirm" placeholder="Repite tu contraseña" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; margin-top: 8px;">
+                    <input type="password" id="securityPasswordConfirm" placeholder="Repite tu contraseña"
+                        style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; margin-top: 8px;">
                 </div>
 
-                <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 5px;">
-                    <p style="margin: 0; color: #856404; font-size: 0.9em;">⚠️ <strong>Importante:</strong> Guarda tu contraseña en un lugar seguro. Si la olvidas, no podremos recuperar tus datos.</p>
+                <div
+                    style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 5px;">
+                    <p style="margin: 0; color: #856404; font-size: 0.9em;">⚠️ <strong>Importante:</strong> Guarda tu
+                        contraseña en un lugar seguro. Si la olvidas, no podremos recuperar tus datos.</p>
                 </div>
 
-                <button onclick="enableEncryption()" class="btn btn-primary" style="width: 100%; margin-bottom: 10px;">🔐 Activar Encripción</button>
+                <button onclick="enableEncryption()" class="btn btn-primary"
+                    style="width: 100%; margin-bottom: 10px;">🔐 Activar Encripción</button>
                 <button onclick="closeSecurityModal()" class="btn btn-secondary" style="width: 100%;">Cancelar</button>
             </div>
 
@@ -1109,21 +1127,147 @@
     </div>
 
     <!-- Modal para editar límite diario -->
-    <div id="limitModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center;">
-        <div style="background: white; border-radius: 15px; padding: 30px; max-width: 400px; width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+    <div id="limitModal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center;">
+        <div
+            style="background: white; border-radius: 15px; padding: 30px; max-width: 400px; width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
             <h2 style="margin-bottom: 20px; color: #667eea;">⚙️ Editar Límite Diario</h2>
 
             <div class="form-group">
                 <label style="color: #333;">Límite Diario (en tu moneda)</label>
-                <div style="display: flex; align-items: center; border: 2px solid #e0e0e0; border-radius: 8px; overflow: hidden; margin-top: 8px;">
-                    <span style="padding: 12px; background: #f0f0f0; font-weight: 700; color: #667eea; font-family: 'Courier New', monospace; font-size: 1.1em;" id="currencySymbol">$</span>
-                    <input type="text" id="limitInput" placeholder="0" style="flex: 1; border: none; padding: 12px; font-size: 1em; font-family: 'Courier New', monospace; font-weight: 600;" oninput="formatLimitInput()">
+                <div
+                    style="display: flex; align-items: center; border: 2px solid #e0e0e0; border-radius: 8px; overflow: hidden; margin-top: 8px;">
+                    <span
+                        style="padding: 12px; background: #f0f0f0; font-weight: 700; color: #667eea; font-family: 'Courier New', monospace; font-size: 1.1em;"
+                        id="currencySymbol">$</span>
+                    <input type="text" id="limitInput" placeholder="0"
+                        style="flex: 1; border: none; padding: 12px; font-size: 1em; font-family: 'Courier New', monospace; font-weight: 600;"
+                        oninput="formatLimitInput()">
                 </div>
             </div>
 
             <div style="display: flex; gap: 10px; margin-top: 20px;">
                 <button onclick="saveDailyLimit()" class="btn btn-primary" style="flex: 1;">💾 Guardar</button>
                 <button onclick="closeLimitModal()" class="btn btn-secondary" style="flex: 1;">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MODALES PARA EDITAR Y ELIMINAR ========== -->
+
+    <!-- Modal para editar gasto -->
+    <div id="editExpenseModal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center;">
+        <div
+            style="background: white; border-radius: 15px; padding: 30px; max-width: 500px; width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+            <h2 style="margin-bottom: 20px; color: #667eea;">✏️ Editar Gasto</h2>
+
+            <div class="form-group">
+                <label style="color: #333;">📅 Fecha</label>
+                <input type="date" id="editExpenseFecha"
+                    style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; margin-top: 8px;">
+            </div>
+
+            <div class="form-group">
+                <label style="color: #333;">🏷️ Categoría</label>
+                <select id="editExpenseCategoria"
+                    style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; margin-top: 8px;">
+                    <option value="Alimentación">🍕 Alimentación</option>
+                    <option value="Transporte">🚗 Transporte</option>
+                    <option value="Vivienda">🏠 Vivienda</option>
+                    <option value="Servicios">⚡ Servicios</option>
+                    <option value="Entretenimiento">🎭 Entretenimiento</option>
+                    <option value="Salud">🏥 Salud</option>
+                    <option value="Educación">📚 Educación</option>
+                    <option value="Otros">📦 Otros</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label style="color: #333;">📝 Descripción</label>
+                <input type="text" id="editExpenseDescripcion" placeholder="Descripción del gasto"
+                    style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; margin-top: 8px;">
+            </div>
+
+            <div class="form-group">
+                <label style="color: #333;">💵 Monto</label>
+                <div
+                    style="display: flex; align-items: center; border: 2px solid #e0e0e0; border-radius: 8px; overflow: hidden; margin-top: 8px;">
+                    <span
+                        style="padding: 12px; background: #f0f0f0; font-weight: 700; color: #667eea; font-family: 'Courier New', monospace; font-size: 1.1em;"
+                        id="editCurrencySymbol">$</span>
+                    <input type="text" id="editExpenseMonto" placeholder="0"
+                        style="flex: 1; border: none; padding: 12px; font-size: 1em; font-family: 'Courier New', monospace; font-weight: 600;"
+                        oninput="formatEditMontoInput()">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label style="color: #333;">📌 Tipo</label>
+                <select id="editExpenseTipo"
+                    style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; margin-top: 8px;">
+                    <option value="Gasto">Gasto</option>
+                    <option value="Gastos Hormiga">Gastos Hormiga</option>
+                    <option value="Ingreso">Ingreso</option>
+                    <option value="Inversión">Inversión</option>
+                </select>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button onclick="saveEditedExpense()" class="btn btn-primary" style="flex: 1;">💾 Guardar</button>
+                <button onclick="closeEditExpenseModal()" class="btn btn-secondary" style="flex: 1;">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación para eliminar gasto -->
+    <div id="deleteExpenseModal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center;">
+        <div
+            style="background: white; border-radius: 15px; padding: 30px; max-width: 450px; width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+            <h2 style="margin-bottom: 10px; color: #ff6b6b; text-align: center;">🗑️ Eliminar Gasto</h2>
+
+            <div
+                style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 5px;">
+                <p style="margin: 0; color: #856404; font-size: 0.95em;">
+                    <strong>⚠️ Atención:</strong> Estás a punto de eliminar este gasto:
+                </p>
+            </div>
+
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <div style="margin-bottom: 12px;">
+                    <span style="color: #666; font-size: 0.9em;">📅 Fecha:</span>
+                    <p style="margin: 5px 0 0 0; font-weight: 600; color: #333;" id="deleteExpenseFechaDisplay">-</p>
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <span style="color: #666; font-size: 0.9em;">🏷️ Categoría:</span>
+                    <p style="margin: 5px 0 0 0; font-weight: 600; color: #333;" id="deleteExpenseCategoriaDisplay">-
+                    </p>
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <span style="color: #666; font-size: 0.9em;">📝 Descripción:</span>
+                    <p style="margin: 5px 0 0 0; font-weight: 600; color: #333;" id="deleteExpenseDescripcionDisplay">-
+                    </p>
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <span style="color: #666; font-size: 0.9em;">💵 Monto:</span>
+                    <p style="margin: 5px 0 0 0; font-weight: 600; color: #ff6b6b; font-size: 1.1em;"
+                        id="deleteExpenseMontoDisplay">$0.00</p>
+                </div>
+            </div>
+
+            <p style="text-align: center; color: #ff6b6b; font-weight: 600; margin: 20px 0;">
+                ¿Deseas eliminar este gasto? Esta acción no se puede deshacer.
+            </p>
+
+            <div style="display: flex; gap: 10px; margin-top: 25px;">
+                <button onclick="confirmDeleteExpense()" class="btn btn-danger"
+                    style="flex: 1; background: #ff6b6b !important;">
+                    🗑️ Sí, Eliminar
+                </button>
+                <button onclick="closeDeleteExpenseModal()" class="btn btn-secondary" style="flex: 1;">
+                    ❌ Cancelar
+                </button>
             </div>
         </div>
     </div>
@@ -1153,7 +1297,7 @@
 
                 request.onupgradeneeded = (event) => {
                     db = event.target.result;
-                    
+
                     if (!db.objectStoreNames.contains('expenses')) {
                         db.createObjectStore('expenses', { keyPath: 'id' });
                     }
@@ -1166,7 +1310,7 @@
                     if (!db.objectStoreNames.contains('settings')) {
                         db.createObjectStore('settings', { keyPath: 'key' });
                     }
-                    
+
                     console.log('✅ ObjectStores creados');
                 };
             });
@@ -1303,7 +1447,7 @@
                 books = (await getFromDB('books')) || [];
                 currentCurrency = localStorage.getItem('currency') || 'COP';
                 activeBook = localStorage.getItem('activeBook');
-                
+
                 // Si hay libro activo, aplicar su tema
                 if (activeBook) {
                     const book = books.find(b => b.id == activeBook);
@@ -1311,7 +1455,7 @@
                         applyTheme(book.tema);
                     }
                 }
-                
+
                 console.log('✅ Datos cargados correctamente');
             } catch (error) {
                 console.error('Error cargando datos:', error);
@@ -1347,7 +1491,7 @@
         function formatMoney(amount) {
             const symbol = currencySymbols[currentCurrency];
             const converted = convertToCurrentCurrency(amount);
-            
+
             if (currentCurrency === 'COP') {
                 return symbol + converted.toLocaleString('es-CO', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
             } else {
@@ -1418,7 +1562,7 @@
         function updateSpendingMeter() {
             const today = new Date().toISOString().split('T')[0];
             const todayExpenses = expenses.filter(e => e.fecha === today && (e.tipo === 'Gasto' || e.tipo === 'Gastos Hormiga')).reduce((sum, e) => sum + e.monto, 0);
-            
+
             const percentage = (todayExpenses / dailyLimit) * 100;
             const available = Math.max(0, dailyLimit - todayExpenses);
 
@@ -1516,7 +1660,7 @@
 
         function getExpensesForCurrentContext() {
             // Retorna gastos según contexto (libro activo o general)
-            return activeBook 
+            return activeBook
                 ? expenses.filter(e => e.bookId === activeBook)
                 : expenses.filter(e => !e.bookId);
         }
@@ -1546,21 +1690,65 @@
             `).join('');
         }
 
-        async function deleteExpense(id) {
-            if (confirm('¿Estás seguro de que deseas eliminar este gasto?')) {
-                expenses = expenses.filter(exp => exp.id !== id);
-                await deleteFromDB('expenses', id);
-                updateExpenseTable();
-                updateDashboard();
-                updateSpendingMeter();
-                showMessage('✅ Gasto eliminado', 'success');
+        // ============ FUNCIONES NUEVAS PARA ELIMINAR ============
+        // Esta función reemplaza a la antigua deleteExpense(id)
+        function deleteExpense(id) {
+            openDeleteExpenseModal(id);
+        }
+
+        // Abre la ventana bonita preguntando si estás seguro
+        function openDeleteExpenseModal(expenseId) {
+            const expense = expenses.find(e => e.id === expenseId);
+            if (!expense) return;
+
+            currentDeletingExpenseId = expenseId;
+
+            // Mostramos la info del gasto a eliminar
+            document.getElementById('deleteExpenseFechaDisplay').textContent = expense.fecha;
+            document.getElementById('deleteExpenseCategoriaDisplay').textContent = expense.categoria;
+            document.getElementById('deleteExpenseDescripcionDisplay').textContent = expense.descripcion;
+
+            // Formato simple de moneda para el aviso
+            document.getElementById('deleteExpenseMontoDisplay').textContent = '$' + expense.monto.toLocaleString('es-CO');
+
+            // ¡Aquí se muestra tu ventana nueva!
+            document.getElementById('deleteExpenseModal').style.display = 'flex';
+        }
+
+        function closeDeleteExpenseModal() {
+            document.getElementById('deleteExpenseModal').style.display = 'none';
+            currentDeletingExpenseId = null;
+        }
+
+        // Esta función se ejecuta cuando le das a "Sí, Eliminar" en tu ventana nueva
+        async function confirmDeleteExpense() {
+            if (!currentDeletingExpenseId) return;
+
+            // Borra de la lista visual
+            expenses = expenses.filter(exp => exp.id !== currentDeletingExpenseId);
+            // Borra de la base de datos
+            await deleteFromDB('expenses', currentDeletingExpenseId);
+
+            updateExpenseTable();
+            updateDashboard();
+            updateSpendingMeter();
+
+            closeDeleteExpenseModal();
+
+            // Mensaje de éxito
+            const msg = document.getElementById('message');
+            if (msg) {
+                msg.textContent = '✅ Gasto eliminado correctamente';
+                msg.className = 'message success';
+                msg.style.display = 'block'; // Asegura que se vea
+                setTimeout(() => { msg.style.display = 'none'; }, 3000);
             }
         }
 
         function updateDashboard() {
             // Solo usar gastos del contexto actual (libro o general)
             const contextExpenses = getExpensesForCurrentContext();
-            
+
             const ingresos = contextExpenses.filter(e => e.tipo === 'Ingreso').reduce((sum, e) => sum + e.monto, 0);
             const gastos = contextExpenses.filter(e => e.tipo === 'Gasto').reduce((sum, e) => sum + e.monto, 0);
             const gastosHormiga = contextExpenses.filter(e => e.tipo === 'Gastos Hormiga').reduce((sum, e) => sum + e.monto, 0);
@@ -1692,7 +1880,7 @@
             let gastosTransferencia = [];
             if (expenses.length > 0) {
                 const transferir = confirm(`📦 Tienes ${expenses.length} gasto(s) sin asignar.\n\n¿Deseas transferirlos a este nuevo libro?\n\nSI = Los gastos irán al nuevo libro\nNO = Los gastos quedarán sin asignar`);
-                
+
                 if (transferir) {
                     gastosTransferencia = expenses.filter(e => !e.bookId);
                 }
@@ -1761,18 +1949,18 @@
         }
 
         function adjustBrightness(color, percent) {
-            const num = parseInt(color.replace("#",""), 16);
+            const num = parseInt(color.replace("#", ""), 16);
             const amt = Math.round(2.55 * percent);
             const R = Math.min(255, (num >> 16) + amt);
             const G = Math.min(255, (num >> 8 & 0x00FF) + amt);
             const B = Math.min(255, (num & 0x0000FF) + amt);
-            return "#" + (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (G<255?G<1?0:G:255)*0x100 + (B<255?B<1?0:B:255)).toString(16).slice(1);
+            return "#" + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 + (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 + (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1);
         }
 
         function openBook(bookId) {
             activeBook = bookId;
             const book = books.find(b => b.id === bookId);
-            
+
             if (book) {
                 localStorage.setItem('activeBook', activeBook);
                 applyTheme(book.tema);
@@ -1793,7 +1981,7 @@
             applyTheme('purple'); // Volver al tema por defecto
             document.getElementById('activeBookHeader').style.display = 'none';
             resetHeaderTitle();
-            
+
             updateExpenseTable();
             updateDashboard();
             updateCashFlow();
@@ -1806,9 +1994,9 @@
             const header = document.getElementById('activeBookHeader');
             const title = document.getElementById('activeBookTitle');
             const stats = document.getElementById('activeBookStats');
-            
+
             const gastoCount = expenses.filter(e => e.bookId === book.id).length;
-            
+
             title.textContent = `📖 ${book.nombre}`;
             stats.textContent = `${gastoCount} gasto(s) registrado(s) en este libro`;
             header.style.display = 'block';
@@ -1821,7 +2009,7 @@
         function applyTheme(tema) {
             const themeColor = themes[tema] || themes.purple;
             const root = document.documentElement;
-            
+
             // Cambiar variables CSS globales - TEMA GLOBAL
             root.style.setProperty('--primary-color', themeColor.primary);
             root.style.setProperty('--secondary-color', themeColor.secondary);
@@ -1839,7 +2027,7 @@
             // Actualizar gradientes de botones y elementos
             const style = document.createElement('style');
             style.id = 'dynamic-theme-styles';
-            
+
             // Remover estilos anteriores si existen
             const oldStyle = document.getElementById('dynamic-theme-styles');
             if (oldStyle) oldStyle.remove();
@@ -1880,7 +2068,7 @@
         async function deleteBook(bookId) {
             const book = books.find(b => b.id === bookId);
             const gastoCount = expenses.filter(e => e.bookId === bookId).length;
-            
+
             if (confirm(`¿Estás seguro de que deseas eliminar "${book.nombre}"?\n\nEste libro tiene ${gastoCount} gasto(s).\nLos gastos quedarán sin asignar a un libro.`)) {
                 // Desasignar gastos del libro
                 expenses.forEach(e => {
@@ -1892,11 +2080,11 @@
 
                 books = books.filter(b => b.id !== bookId);
                 await deleteFromDB('books', bookId);
-                
+
                 if (activeBook === bookId) {
                     exitBook();
                 }
-                
+
                 loadBooksList();
                 showMessageLibros(`✅ Libro "${book.nombre}" eliminado. Sus gastos quedan sin asignar.`, 'success');
             }
@@ -2080,7 +2268,7 @@
             const currentYear = new Date().getFullYear();
             const tbody = document.getElementById('cashFlowBody');
             const contextExpenses = getExpensesForCurrentContext();
-            
+
             let html = '';
             for (let year = currentYear; year <= currentYear + 5; year++) {
                 const yearExpenses = contextExpenses.filter(e => new Date(e.fecha).getFullYear() === year);
@@ -2104,15 +2292,15 @@
             const currentYear = new Date().getFullYear();
             const tbody = document.getElementById('proyectionBody');
             const contextExpenses = getExpensesForCurrentContext();
-            
+
             // Calcular promedio mensual de los últimos 3 meses
             const threeMonsAgo = new Date();
             threeMonsAgo.setMonth(threeMonsAgo.getMonth() - 3);
-            
+
             const recentExpenses = contextExpenses.filter(e => new Date(e.fecha) >= threeMonsAgo);
             const avgMonthlyGastos = recentExpenses.filter(e => e.tipo === 'Gasto' || e.tipo === 'Gastos Hormiga').reduce((sum, e) => sum + e.monto, 0) / 3;
             const avgMonthlyIngresos = recentExpenses.filter(e => e.tipo === 'Ingreso').reduce((sum, e) => sum + e.monto, 0) / 3;
-            
+
             let html = '';
             for (let year = currentYear; year <= currentYear + 5; year++) {
                 const monthsInYear = year === currentYear ? (new Date().getMonth() + 1) : 12;
@@ -2128,27 +2316,94 @@
             tbody.innerHTML = html;
         }
 
-        // ============ Editar Gastos ============
+        // ============ FUNCIONES NUEVAS PARA EDITAR ============
+        let currentEditingExpenseId = null;
+
         function editExpense(id) {
-            const expense = expenses.find(e => e.id === id);
+            openEditExpenseModal(id);
+        }
+
+        function openEditExpenseModal(expenseId) {
+            const expense = expenses.find(e => e.id === expenseId);
             if (!expense) return;
 
-            const newDescription = prompt('Editar descripción:', expense.descripcion);
-            if (newDescription === null) return;
+            currentEditingExpenseId = expenseId;
 
-            const newAmount = prompt('Editar monto:', expense.monto);
-            if (newAmount === null) return;
+            document.getElementById('editExpenseFecha').value = expense.fecha;
+            document.getElementById('editExpenseCategoria').value = expense.categoria;
+            document.getElementById('editExpenseDescripcion').value = expense.descripcion;
 
-            if (newDescription.trim() && !isNaN(newAmount) && parseFloat(newAmount) > 0) {
-                expense.descripcion = newDescription.trim();
-                expense.monto = parseFloat(newAmount);
-                saveToDB('expenses', expense);
+            // Tratamos de quitar símbolos extra para mostrar solo el número
+            let montoLimpio = expense.monto;
+            document.getElementById('editExpenseMonto').value = Math.floor(montoLimpio).toLocaleString('es-CO');
+
+            document.getElementById('editExpenseTipo').value = expense.tipo;
+            document.getElementById('editCurrencySymbol').textContent = currencySymbols[currentCurrency] || '$';
+
+            document.getElementById('editExpenseModal').style.display = 'flex';
+        }
+
+        function closeEditExpenseModal() {
+            document.getElementById('editExpenseModal').style.display = 'none';
+            currentEditingExpenseId = null;
+        }
+
+        function formatEditMontoInput() {
+            let input = document.getElementById('editExpenseMonto');
+            let value = input.value.replace(/[^0-9]/g, '');
+            if (value === '') {
+                input.value = '';
+                return;
+            }
+            let number = parseInt(value);
+            input.value = number.toLocaleString('es-CO');
+        }
+
+        async function saveEditedExpense() {
+            if (!currentEditingExpenseId) return;
+
+            const fecha = document.getElementById('editExpenseFecha').value;
+            const categoria = document.getElementById('editExpenseCategoria').value;
+            const descripcion = document.getElementById('editExpenseDescripcion').value;
+            const montoText = document.getElementById('editExpenseMonto').value.replace(/[^0-9]/g, '');
+            const monto = parseFloat(montoText);
+            const tipo = document.getElementById('editExpenseTipo').value;
+
+            if (!fecha || !categoria || !descripcion || isNaN(monto) || monto <= 0 || !tipo) {
+                alert('❌ Por favor completa todos los campos correctamente');
+                return;
+            }
+
+            const index = expenses.findIndex(e => e.id === currentEditingExpenseId);
+            if (index !== -1) {
+                expenses[index].fecha = fecha;
+                expenses[index].categoria = categoria;
+                expenses[index].descripcion = descripcion;
+                expenses[index].monto = monto;
+                expenses[index].tipo = tipo;
+
+                await saveToDB('expenses', expenses[index]);
+
+                // Actualizar toda la interfaz
                 updateExpenseTable();
                 updateDashboard();
                 updateSpendingMeter();
-                updateCashFlow();
-                updateProjection();
-                showMessage('✅ Gasto actualizado', 'success');
+
+                // Actualizar reporte si está visible (opcional)
+                if (document.getElementById('reportes').classList.contains('active')) {
+                    filterExpenses();
+                }
+
+                closeEditExpenseModal();
+
+                // Mostrar mensaje de éxito
+                const msg = document.getElementById('message');
+                if (msg) {
+                    msg.textContent = '✅ Gasto actualizado exitosamente';
+                    msg.className = 'message success';
+                    msg.style.display = 'block';
+                    setTimeout(() => { msg.style.display = 'none'; }, 3000);
+                }
             }
         }
 
@@ -2176,10 +2431,10 @@
 
             try {
                 console.log('🔄 Sincronizando datos...');
-                
+
                 // Aquí iría la lógica de sincronización con servidor
                 // Por ahora es local-only
-                
+
                 setTimeout(() => {
                     syncIndicator.classList.remove('show');
                     console.log('✅ Sincronización completada');
@@ -2228,7 +2483,7 @@
             updateSpendingMeter();
             updateCashFlow();
             updateProjection();
-            
+
             // Si hay libro activo al cargar, mostrar su nombre
             if (activeBook) {
                 const book = books.find(b => b.id == activeBook);
@@ -2241,4 +2496,5 @@
         init();
     </script>
 </body>
+
 </html>
