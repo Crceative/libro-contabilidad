@@ -13,7 +13,7 @@ Aplicación PWA para gestionar gastos e ingresos de forma segura y offline.
 
 ## 🚀 Instalación
 
-1. Abre el link: https://tu-usuario.github.io/libro-contabilidad
+1. Abre el link: https://juanpis117-dev.github.io/libro-contabilidad/)
 2. En móvil: Menu → Instalar
 3. En PC: Menu → Crear acceso directo
 
@@ -39,3 +39,4 @@ Juan Pablo Velásquez
 ## 📜 Licencia
 
 MIT - Libre para usar y modificar
+
